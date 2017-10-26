@@ -1,0 +1,39 @@
+inherit qt5-qmake
+
+NAME="qt5-virtualkeyboard"
+VERSION=5.9.2
+RELEASE=1
+CATEGORY="X11"
+SUMMARY="Qt C++ application framework (virtual keyboard)"
+DESCRIPTION="Qt is a cross-platform application framework for desktop and
+embedded development. Qt enables programmers to create advanced GUI
+applications once and deploy them to Windows, Mac OS X and Linux without
+rewriting the source code. Companies using Qt can leverage software
+investments made on one platform across many others."
+HOMEPAGE="https://www.qt.io/"
+SRC_URI="http://download.qt.io/official_releases/qt/${VERSION%.*}/${VERSION}/submodules/qtvirtualkeyboard-opensource-src-${VERSION}.tar.xz"
+SRC_DIR="qtvirtualkeyboard-opensource-src-${VERSION}"
+
+PKG_NAMES="${NAME} ${NAME}-doc ${NAME}-examples"
+qt5_virtualkeyboard_CONTENTS="
+	usr/lib/cmake/Qt5Gui/Qt5Gui_QVirtualKeyboardPlugin.cmake
+	usr/lib/qt5/plugins/platforminputcontexts/cygqtvirtualkeyboardplugin.dll
+	usr/lib/qt5/qml/QtQuick/VirtualKeyboard/
+	usr/share/doc/
+"
+qt5_virtualkeyboard_doc_CATEGORY="Doc"
+qt5_virtualkeyboard_doc_CONTENTS="usr/share/qt5/doc/qtvirtualkeyboard*"
+qt5_virtualkeyboard_examples_CATEGORY="X11"
+qt5_virtualkeyboard_examples_CONTENTS="usr/lib/qt5/examples/virtualkeyboard/"
+
+src_compile() {
+	cd ${B}
+	cygqmake5 ${S}
+	cygmake
+	cygmake docs
+}
+
+src_install() {
+	cd ${B}
+	qt5_qmake_install install_docs
+}
